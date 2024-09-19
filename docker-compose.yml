@@ -1,0 +1,35 @@
+
+services:
+  recetapp-api:
+    build:
+      context: ./recetapp-api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: app
+      DB_PASSWORD: "12"
+      DB_NAME: recetapp
+      DB_PORT: 56842
+    depends_on:
+      - db
+
+  recetapp-frontend:
+    build:
+      context: ./recetapp-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4321:4321"
+    depends_on:
+      - backend
+
+  db:
+    image: sqlServer 
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=recipes
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
